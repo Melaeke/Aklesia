@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
 
 var Schema = mongoose.Schema;
 
@@ -12,6 +13,34 @@ var UserSchema = new Schema(
 
     }
 );
+
+//Note that the pre function doesn't support the ES6 (()=>{}) function syntax.
+//hashing password before savig to databse.
+UserSchema.pre('save',function(next){
+    var user=this;
+    bcrypt.hash(user.password,10,(err,hash)=>{
+        if(err){
+            console.error(err);
+            return next(err);
+        }
+        user.password=hash;
+        next();
+    });
+});
+
+//hashing password before updating the password.
+UserSchema.pre('findOneAndUpdate',function(next){
+    if(this._update.password){
+        bcrypt.hash(this._update.password,10,(err,hash)=>{
+            if(err){
+                console.error(err);
+                return next(err);
+            }
+            this._update.password=hash;
+            next();
+        });
+    }
+});
 
 UserSchema.virtual('url').get(function(){
     return 'api/user/'+this._id;
