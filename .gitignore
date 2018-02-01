@@ -57,3 +57,16 @@ typings/
 # dotenv environment variables file
 .env
 
+#Melaeke --added to remove VS Code files
+Backups/
+Cache/
+CachedData/
+CachedExtensions/
+GPUCache/
+Local Storage/
+Cookies
+Cookies-journal
+machineid
+package-lock.json
+Preferences
+storage.json
