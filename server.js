@@ -10,6 +10,7 @@ mongoose.connect('mongodb://localhost:27017/aklesia_db');
 //Parsers
 app.use(bodyParser.json());
 app.use('/node_modules',express.static(__dirname+"/node_modules"));
+app.use('/app',express.static(__dirname+"/app"));
 
 //send index.html for the home page
 app.get('/',(req,res)=>{
