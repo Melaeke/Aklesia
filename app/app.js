@@ -1,3 +1,5 @@
+'use strict';
+
 var app = angular.module('aklesia',['ngRoute']);
 
 app.config(($routeProvider)=>{
@@ -7,13 +9,13 @@ app.config(($routeProvider)=>{
         templateUrl:"app/views/index.html"
     }).when("/pages",{
         templateUrl: "app/views/pages.html",
-        controller: "app/controllers/pages"
+        controller: "pagesController"
     }).when("/contents",{
         templateUrl: "app/views/contents.html",
-        controller: "app/controllers/contents"
+        controller: "contentsController"
     }).when("/notifications",{
         templateUrl: "app/views/notifications.html",
-        controller: "app/controllers/contents"
+        controller: "notificationsController"
     })
 })
 
