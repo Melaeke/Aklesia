@@ -7,9 +7,9 @@
   </title>
 </head>
 
-<body ng-app="aklesia">
+<body ng-app="aklesia" >
   <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
-    <a class="navbar-brand" href="#">Aklesia</a>
+    <a class="navbar-brand" href="/">Aklesia</a>
     <button class="navbar-toggler collapsed" type="button" href="#navbarSupportedContent" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -17,38 +17,38 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="nav navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" href="/">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#pages">Pages</span>
+            <a class="nav-link" href="#!pages">Pages</span>
             </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#contents">Contents</a>
+            <a class="nav-link" href="#!contents">Contents</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#Notifications"> Notifications</a>
+            <a class="nav-link" href="#!notifications"> Notifications</a>
           </li>
         </ul>
         <ul class="ml-md-auto navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#login">Login</a>
+            <a class="nav-link" href="login">Login</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#logout">Logout</a>
+            <a class="nav-link" href="logout">Logout</a>
           </li>
         </ul>
       </div>
   </nav>
-  <div class="form ">
-    This is a test and it should be displayed
+  <div  ng-view>
   </div>
 </body>
 <script type="text/javascript" src="app/lib/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="app/lib/bootstrap-4.0.0-dist/js/bootstrap.min.js" ></script>
-<script type="text/javascript" src="node_modules/angular/angular.js"></script>
+<script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
+<script type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script>
 <script type="text/javascript" src="app/app.js"></script>
 
 </html>
