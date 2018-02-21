@@ -1,3 +1,159 @@
+<!--
+
+    TODO list
+
+    perform validation before submitting form
+
+    perform email validation and check if all elements exist before sending for submit.
+
+
+
+
+
+
+
+-->
+
+
+
+
+
+
 <div>
-    The selected content is {{selectedContent}}
+    <ng-form name="mainForm" >
+        <!--first user has to choose which element to edit-->
+        <div class="form-group">
+            <label for="catagory">Catagory</label>
+            <select ng-model="model.selectedCatagory" class="selectpicker form-control">
+                <option value selected disabled>--Please select an elelement--</option>
+                <option ng-repeat="catagory in model.allCatagories" value="{{catagory}}">{{catagory}}
+                </option>
+            </select>
+        </div>
+
+        <!--next user has to choose between editing an existing element or creating a new one-->
+        <div class="form-group" ng-if="model.selectedCatagory">
+            <button type="button" class="btn btn-primary btn-lg " ng-click="action('editExisting');">Edit Existing</button>
+            <button type="button" class="btn btn-primary btn-lg float-right" ng-click="action('createNew');">Create new</button>
+        </div>
+
+
+        <!-- ---------------------------- User editing form--------------- -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'User' && model.selectedAction && model.selectedUser " ng-model="model.user">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" ng-model="model.user.email"/>
+            </div>
+            <div class="form-group" >
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" ng-model="model.user.firstName"/>
+            </div>
+            
+            <div class="form-group" >
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" ng-model="model.user.lastName"/>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" ng-model="model.user.password"/>
+            </div>
+
+            <div class="form-group" >
+                <label for="userType">userType</label>
+                <select ng-model="model.user.userType" class="selectpicker form-control">
+                    <option value selected disabled>--Please select a user Type</option>
+                    <option ng-repeat="userType in model.allUserTypes" value="{{userType}}">{{userType}}</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-success" ng-click="save('user');">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="save('user');">Delete User</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="save('user');">Cancel</button>
+        </div>
+
+
+        <!-- -------------------------------User listing table ------------------------ -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'User' && model.selectedAction && !model.selectedUser">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th>First Name</th><th>User Type</th><th>Email</th></tr>
+                </thead>
+                <tr ng-repeat="user in model.allUsers" ng-click="selectUser(model.allUsers[$index])">
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.userType}}</td>
+                    <td>{{user.email}}</td>
+                </a>
+                </tr>
+
+            </table>
+        </div>
+        
+
+        <!--Title is for page and article and not for user.  -->
+        <div class="form-group" ng-if="selectedCatagory === 'Page' || selectedCatagory=== 'Article'">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" ng-model="title" />
+        </div>
+
+        <!--<table class="table table-hover table-bordered">
+            <thead>
+                <tr><th>Name</th><th>User Type</th></tr>
+            </thead>
+            <tr ng-repeat="user in allUsers">
+                <td>{{user.name}}</td>
+                <td>{{user.userType}}</td>
+            </tr>
+        </table>
+
+        <!----------------------User------------------------- -->
+        <!-- User managment should be done using a table to list all users-->
+
+        
+
+
+        <!-- ---------------------------Page----------------- -->
+        <div class="form-group" ng-if="selectedCatagory === 'Article'">
+            <label for="type">Type</label>
+            <!--parent is necessary because ng0=-if creates it's own child scope-->
+            <select ng-model="$parent.selectedType" class="selectpicker form-control">
+                <option value selected disabled>--Please select a type--</option>
+                <option ng-repeat="articleType in allArticleTypes" value="{{articleType}}">{{articleType}}</option>
+            </select>
+        </div>
+        <div class="form-group" ng-if="selectedCatagory === 'Article'">
+            <label for="type">Type</label>
+            <!--parent is necessary because ng0=-if creates it's own child scope-->
+            <select ng-model="$parent.selectedType" class="selectpicker form-control">
+                <option value selected disabled>--Please select a type--</option>
+                <option ng-repeat="articleType in allArticleTypes" value="{{articleType}}">{{articleType}}</option>
+            </select>
+        </div>
+        <!--
+        <div class="form-group">
+            <label for="page">Page</label>
+            <select ng-model="selectedPage" class="selectpicker form-control">
+                <option value selected disabled>--Please select a Page--</option>
+                <option ng-repeat="page in allPages" value="{{page}}">{{page}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="thumbnailPic">Thumbnail Picture</label>
+            <input type="file"/>
+        </div>
+        <div class="form-group">
+            <label for="smallDescription">Small Description</label>
+            <textarea class="form-control"/>
+        </div>
+        <div class="form-group" ng-if="selectedType === 'Text'">
+            <label for="Content">Content</label>
+            <textarea class="form-control">Here we will add a WYSWYG editor</textarea>
+        </div>
+        <button type="submit" class="btn-success">Save</button>
+        {{selectedCatagory}} {{selectedType}}
+
+    -->
+    </ng-form>
+
+    
 </div>
