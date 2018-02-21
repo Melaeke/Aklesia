@@ -6,7 +6,8 @@
 
 var mainApp = angular.module('aklesia');
 
-mainApp.controller('contentsController',function ($scope){
+mainApp.controller('contentsController',function ($scope,$http){
+    initialize($scope,$http);
     $scope.model=[];
     $scope.model.allCatagories=["Page","Article","User"];
     $scope.model.allArticleTypes=["Text","Picture","Video","Audio"];
@@ -88,3 +89,24 @@ mainApp.controller('contentsController',function ($scope){
         console.log("Selected Catagory",$scope.model.selectedCatagory);
     });
 })
+
+var initialize=($scope,$http)=>{
+    $scope.model=[];
+    $scope.model.allCatagories=["Page","Article","User"];
+    $http.get("api/articleTypes").then((response)=>{
+        $scope.model.allArticleTypes=response.data;
+        console.log(response);
+    });
+
+    $http.get("api/users").then((response)=>{
+        $scope.model.allUsers=response.data;
+        console.log(response);
+    });
+
+    $http.get("api/pages").then((response)=>{
+        $scope.model.allPages=response.data;
+        console.log(response);
+    });
+
+    
+}
