@@ -55,8 +55,8 @@
             </div>
 
             <button type="button" class="btn btn-success" ng-click="save('user');">Save</button>
-            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="save('user');">Delete User</button>
-            <button type="button" class="btn btn-primary float-right" ng-click="save('user');">Cancel</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('user');">Delete User</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
 
 
@@ -84,9 +84,9 @@
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" ng-model="model.page.name"/>
             </div>
-            <button type="button" class="btn btn-success" ng-click="save('user');">Save</button>
-            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="save('user');">Delete Page</button>
-            <button type="button" class="btn btn-primary float-right" ng-click="save('user');">Cancel</button>
+            <button type="button" class="btn btn-success" ng-click="save('page');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('page');">Delete Page</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
 
 
@@ -166,8 +166,24 @@
                 </label>
                 <span class="label label-info" id="picture-file-info"></span>
             </div>
-            
+            <button type="button" class="btn btn-success" ng-click="save('article');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('article');">Delete Article</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
+
+        <!-- --------------------------Articles list form ---------------------------- -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'Article' && model.selectedAction && !model.selectedArticle">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr><th>Article Title</th><th>Article Type</th><th>Page</th></tr>
+                    </thead>
+                    <tr ng-repeat="article in model.allArticles" ng-click="selectArticle(model.allArticles[$index])">
+                        <td>{{article.title}}</td>
+                        <td>{{article.type}}</td>
+                        <td>{{article.page.name}}</td>
+                    </tr>
+                </table>
+            </div>
 
 
     </ng-form>
