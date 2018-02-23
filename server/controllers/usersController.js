@@ -2,9 +2,17 @@ var mongoose = require('mongoose');
 var User = require('../dataSets/users');
 
 exports.getAll=(req,res)=>{
-
     //added '-password' not to send back the password
-    User.find({},'-password',(err,user)=>{
+    var fields="-password";
+    if(req.query.fields){
+        //split the comma separated fields and then join them with space to return them back.
+        fields=req.query.fields.split(',');
+        if(fields.indexOf('password')>-1){
+            res.json({"Error":"What a sneaky thing you are doing remove the password field first."});
+            return;
+        }
+    }
+    User.find({},fields,(err,user)=>{
         if(err){
             console.error(err);
             res.send(err);
@@ -14,21 +22,26 @@ exports.getAll=(req,res)=>{
 };
 
 exports.create=(req,res)=>{
-    var newUser=new User(req.body);
-    newUser.save((err,user)=>{
-        if(err){
-            console.error(err);
-            res.send(err);
-        }
+    if(!checkIfCorrect(req.body,"new")){
+        res.json({"Error":"User can't be created User doesn't have all the fields required."});
+    }
+    else{
+        var newUser=new User(req.body);
+        newUser.save((err,user)=>{
+            if(err){
+                console.error(err);
+                res.send(err);
+            }
 
-        //added as a confirmation message and also not to send back the password.
-        user.password="Successfully created User"
-        res.json(user);
-    });
+            //added as a confirmation message and also not to send back the password.
+            user.password=""
+            res.json(user);
+        });
+    }
 };
 
 exports.getOne=(req,res)=>{
-    User.findById(req.params.userId,(err,user)=>{
+    User.findById(req.params.userId,'-password',(err,user)=>{
         if(err){
             console.error(err);
             res.send(err);
@@ -38,15 +51,27 @@ exports.getOne=(req,res)=>{
 };
 
 exports.update=(req,res)=>{
-    User.findOneAndUpdate({_id:req.params.userId},req.body,{new: false},(err,user)=>{
+    User.findById(req.params.userId,(err,user)=>{
         if(err){
             console.error(err);
-            res.send(err);
+            res.send("User Id doesn't exist");
         }
-
-        //delete the password so it won't be replied back as a response.
-        user.password="Updating user successful";
-        res.json(user);
+        var updatedUser=req.body;
+        user.firstName=updatedUser.firstName;
+        user.lastName=updatedUser.lastName;
+        user.userType=updatedUser.userType;
+        if(updatedUser.password){
+            user.password=updatedUser.password;
+        }
+        console.log("updating new user ",user.firstName);
+        user.save((err,user)=>{
+            if(err){
+                console.error(err);
+                res.send({"Error":"Unable to update user"});
+            }
+            user.password="";
+            res.json(user);
+        });
     });
 };
 
@@ -58,4 +83,24 @@ exports.delete=(req,res)=>{
         }
         res.json({message: 'User Successfully deleted'});
     })
+}
+
+var checkIfCorrect=(user,newOrExisting)=>{
+    if(newOrExisting==="new"){
+        if(user.password && user.email && user.firstName && user.lastName){
+            //checks if all fields are inserted.
+            return true;
+        }else{
+            //if any fields are missing it will return false.
+            return false;
+        }
+    }else if(newOrExisting === "existing"){
+        //if we are editing an existing element
+        if(user._id){
+            //check if the element has an id or not. if it doesn't return false.
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

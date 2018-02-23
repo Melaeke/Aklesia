@@ -35,4 +35,9 @@ module.exports = (app)=>{
         .put(articlesController.update)
         .delete(articlesController.delete);
     
+    app.route('/api/userTypes')
+        .get((req,res)=>{
+            res.json(
+                ["Admin","uploader","normal"]);
+        })
 }

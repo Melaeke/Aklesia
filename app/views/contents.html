@@ -28,21 +28,21 @@
         <!-- ---------------------------- User editing form--------------- -->
         <div class="form-group" ng-if="model.selectedCatagory === 'User' && model.selectedAction && model.selectedUser " ng-model="model.user">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" ng-model="model.user.email"/>
+                <label for="email">Email *</label>
+                <input type="email" class="form-control" id="email" ng-model="model.user.email" ng-disabled="model.actionType !== 'createNew'"/>
             </div>
             <div class="form-group" >
-                <label for="firstName">First Name</label>
+                <label for="firstName">First Name *</label>
                 <input type="text" class="form-control" id="firstName" ng-model="model.user.firstName"/>
             </div>
             
             <div class="form-group" >
-                <label for="lastName">Last Name</label>
+                <label for="lastName">Last Name *</label>
                 <input type="text" class="form-control" id="lastName" ng-model="model.user.lastName"/>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Password *</label>
                 <input type="password" class="form-control" id="password" ng-model="model.user.password"/>
             </div>
 
@@ -54,8 +54,8 @@
                 </select>
             </div>
 
-            <button type="button" class="btn btn-success" ng-click="save('user');">Save</button>
-            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('user');">Delete User</button>
+            <button type="button" class="btn btn-success" ng-click="save('User');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('User');">Delete User</button>
             <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
 
@@ -84,8 +84,8 @@
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" ng-model="model.page.name"/>
             </div>
-            <button type="button" class="btn btn-success" ng-click="save('page');">Save</button>
-            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('page');">Delete Page</button>
+            <button type="button" class="btn btn-success" ng-click="save('Page');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Page');">Delete Page</button>
             <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
 
@@ -105,7 +105,7 @@
         </div>
 
         <!-- ---------------------------Articles Editing form --------------------------- -->
-        <div class="form-group" ng-if=" model.selectedCatagory === 'Article' && model.selectedAction && model.selectedArticle" ng-model="model.article">
+        <div class="form-group"action ng-if=" model.selectedCatagory === 'Article' && model.selectedAction && model.selectedArticle" ng-model="model.article">
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" id="name" ng-model="model.article.title"/>
@@ -166,24 +166,33 @@
                 </label>
                 <span class="label label-info" id="picture-file-info"></span>
             </div>
-            <button type="button" class="btn btn-success" ng-click="save('article');">Save</button>
-            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('article');">Delete Article</button>
+            <button type="button" class="btn btn-success" ng-click="save('Article');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Article');">Delete Article</button>
             <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
         </div>
 
         <!-- --------------------------Articles list form ---------------------------- -->
         <div class="form-group" ng-if="model.selectedCatagory === 'Article' && model.selectedAction && !model.selectedArticle">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                        <tr><th>Article Title</th><th>Article Type</th><th>Page</th></tr>
-                    </thead>
-                    <tr ng-repeat="article in model.allArticles" ng-click="selectArticle(model.allArticles[$index])">
-                        <td>{{article.title}}</td>
-                        <td>{{article.type}}</td>
-                        <td>{{article.page.name}}</td>
-                    </tr>
-                </table>
-            </div>
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th>Article Title</th><th>Article Type</th><th>Page</th></tr>
+                </thead>
+                <tr ng-repeat="article in model.allArticles" ng-click="selectArticle(model.allArticles[$index])">
+                    <td>{{article.title}}</td>
+                    <td>{{article.type}}</td>
+                    <td>{{article.page.name}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ----------------------------Error message viewer ------------------------ -->
+        <div class="form-group alert alert-danger" ng-if="model.showErrorMessage" >
+            <label >{{model.errorMessage}}</label>
+        </div>
+        <div class="form-group alert alert-success" ng-if="model.showStatusMessage" >
+            <label >{{model.statusMessage}}</label>
+        </div>
+
 
 
     </ng-form>
