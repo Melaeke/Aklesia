@@ -42,7 +42,15 @@ module.exports = (app)=>{
         .put(pagesController.update)
         .delete(pagesController.delete);
 
+
     
+    //predefined values
+    app.route('/api/articleTypes')
+        .get((req,res)=>{
+            res.json(
+                ['Picture','Text','Video','Live','Audio','Resources']
+            );
+        });
     
     app.route('/api/userTypes')
         .get((req,res)=>{
