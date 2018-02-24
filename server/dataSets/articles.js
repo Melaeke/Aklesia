@@ -8,7 +8,7 @@ var ArticleSchema = new Schema({
     content:{type: String},
     created_time: {type: Date,default: Date.now},
     user: {type: Schema.ObjectId, ref: 'User',required: true},
-    type: {type: Schema.ObjectId, ref: 'ArticleType', required: true},
+    type:{type: String, required: true, enum: ['Picture','Text','Video','Live','Audio','Resources'],default: 'Text'},
     lastUpdated: {type: Date},
     page: {type:Schema.ObjectId,ref:'Page',required: true}
 });

@@ -14,16 +14,6 @@ module.exports = (app)=>{
         .put(usersController.update)
         .delete(usersController.delete);
 
-    var articlesTypeController= require('../controllers/articleTypesController');
-    app.route('/api/articleTypes')
-        .get(articlesTypeController.getAll)
-        .post(articlesTypeController.create);
-
-    app.route('/api/articleTypes/:articelTypeId')
-        .get(articlesTypeController.getOne)
-        .put(articlesTypeController.update)
-        .delete(articlesTypeController.delete);
-
     //articles
     var articlesController=require('../controllers/articlesController');
     app.route('/api/articles')
