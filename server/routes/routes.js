@@ -34,6 +34,25 @@ module.exports = (app)=>{
         .get(articlesController.getOne)
         .put(articlesController.update)
         .delete(articlesController.delete);
+
+    app.route('/api/articlesPerPage/:pageId')
+        .get(articlesController.articlesPerPage);
+
+    //pages
+    var pagesController=require('../controllers/pagesController');
+    app.route('/api/pages')
+        .get(pagesController.getAll)
+        .post(pagesController.create);
+
+    app.route('/api/addArticleToPage')
+        .post(pagesController.addArticle);
+    
+    app.route('/api/pages/:pageId')
+        .get(pagesController.getOne)
+        .put(pagesController.update)
+        .delete(pagesController.delete);
+
+    
     
     app.route('/api/userTypes')
         .get((req,res)=>{

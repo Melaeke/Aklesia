@@ -84,6 +84,18 @@
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" ng-model="model.page.name"/>
             </div>
+            <div class="form-group" ng-if="model.actionType === 'editExisting'">
+                <label for="articleList">Articles in page</label>
+                <table class="table table-hover table-bordered" id="articleList">
+                    <thead>
+                        <tr><th>Title</th><th>Type</th></tr>
+                    </thead>
+                    <tr ng-repeat="article in model.articlesInPage" ng-click="selectArticleInPage(model.articlesInPage[$index])">
+                        <td>{{article.title}}</td>
+                        <td>{{article.type.name}}</td>
+                    </tr>
+                </table>
+            </div>
             <button type="button" class="btn btn-success" ng-click="save('Page');">Save</button>
             <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Page');">Delete Page</button>
             <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
@@ -94,11 +106,11 @@
         <div class="form-group" ng-if="model.selectedCatagory === 'Page' && model.selectedAction && !model.selectedPage">
             <table class="table table-hover table-bordered">
                 <thead>
-                    <tr><th>Page Name</th><th>Number of articles under Page</th></tr>
+                    <tr><th>Page Name</th><th>Number of articles in Page</th></tr>
                 </thead>
                 <tr ng-repeat="page in model.allPages" ng-click="selectPage(model.allPages[$index])">
                     <td>{{page.name}}</td>
-                    <td>{{page.numberOfArticles}}</td>
+                    <td>{{page.articles.length}}</td>
 
                 </tr>
             </table>

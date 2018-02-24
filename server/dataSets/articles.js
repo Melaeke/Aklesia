@@ -9,7 +9,8 @@ var ArticleSchema = new Schema({
     created_time: {type: Date,default: Date.now},
     user: {type: Schema.ObjectId, ref: 'User',required: true},
     type: {type: Schema.ObjectId, ref: 'ArticleType', required: true},
-    lastUpdated: {type: Date}
+    lastUpdated: {type: Date},
+    page: {type:Schema.ObjectId,ref:'Page',required: true}
 });
 
 ArticleSchema.pre('save',function(next){
