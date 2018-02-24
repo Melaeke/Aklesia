@@ -15,17 +15,36 @@ exports.getAll = (req,res)=>{
     if(req.query.pageNumber){
         pageNumber=parseInt(req.query.pageNumber);
     }
+    var fields ="";
+    var populatePage=false;
+    if(req.query.fields){
+        fields=req.query.fields.split(',');
+        if(fields.indexOf("page")>-1){
+            populatePage=true;
+        }
+    }
 
-    Article.find({})
+    Article.find({},fields)
         .sort([['lastUpdated','descending']])
         .limit(pageSize)
         .skip(pageSize*pageNumber)
-        .exec((err,article)=>{
+        .exec((err,articles)=>{
             if(err){
                 console.error(err);
                 res.send(err);
             }
-            res.json(article);
+
+            //if page is requiested populate only name field
+            if(populatePage){
+                Article.populate(articles,{path:"page",select:{"name":1}},function(err,articles){
+                    if(err){
+                        console.error("cannot populate Pages to articles",err);
+                    }
+                    res.json(articles);
+                });
+            }else{
+                res.json(articles);
+            }
         });
 };
 

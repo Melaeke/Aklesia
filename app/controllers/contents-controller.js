@@ -18,15 +18,18 @@ mainApp.controller('contentsController',function ($scope,$http){
 
         switch($scope.model.selectedCatagory){
             case "User":{
-                fetchElements($scope,$http,"api/userTypes")
-                    .then((allUserTypes)=>{
-                        $scope.model.allUserTypes=allUserTypes;
-                    },(error)=>{
-                        console.error(error);
-                });
+                if(!$scope.model.allUserTypes){
+                    fetchElements($scope,$http,"api/userTypes")
+                        .then((allUserTypes)=>{
+                            $scope.model.allUserTypes=allUserTypes;
+                        },(error)=>{
+                            console.error(error);
+                    });
+                }
                 if(actionType === 'createNew'){
                     $scope.model.selectedUser=true;
                 }else{
+                    //because deletion might occur it is better to get this from server everyime.
                     fetchElements($scope,$http,"api/users?fields=_id,firstName,userType,email")
                         .then((allUsers)=>{
                             //this is a success
@@ -41,23 +44,54 @@ mainApp.controller('contentsController',function ($scope,$http){
                 break;
             }case "Page":{
                 //if we are creating a new page there is nothing to do here only when editing a field.
-                if(actionType==='editExisting'){
+                if(actionType==="editExisting"){
+                    $scope.model.selectedArticle=false;
                     fetchElements($scope,$http,"api/pages")
                         .then((allPages)=>{
                             $scope.model.allPages=allPages;      
                         },(error)=>{
                             console.error(error);
                             showErrorMessage($scope,"Can not access Server");
-                        })
+                    })
+                }else{
+                    $scope.model.selectedPage=true;
                 }
                 break;
             }case "Article":{
-
+                fetchElements($scope,$http,"api/articleTypes")
+                    .then((allArticleTypes)=>{
+                        $scope.model.allArticleTypes=allArticleTypes;
+                    },(error)=>{
+                        console.error(error);
+                    });
+                //if all pages is not loaded, load it now.
+                if(!$scope.model.allPages){
+                    fetchElements($scope,$http,"api/pages")
+                        .then((allPages)=>{
+                            $scope.model.allPages=allPages;
+                        },(error)=>{
+                            console.error(error);
+                            showErrorMessage($scope,"Can not access Server");
+                        });
+                }
+                if(actionType==="createNew"){
+                    $scope.model.selectedArticle=true;
+                }else{
+                    $scope.model.selectedArticle=false;
+                    //fetch all articles.
+                    fetchElements($scope,$http,"api/articles/?fields=title,type,page&pageSize=0")
+                    .then((allArticles)=>{
+                        $scope.model.allArticles=allArticles;
+                    },(error)=>{
+                        console.error(error);
+                        showErrorMessage($scope,"Can not access server");
+                    });
+                }
             }
         }
 
 
-
+/*
         if(actionType === 'createNew'){
              if($scope.model.selectedCatagory==='Page'){
                 $scope.model.selectedPage=true;
@@ -66,11 +100,11 @@ mainApp.controller('contentsController',function ($scope,$http){
             }
         }else if(actionType === 'editExisting'){
             if($scope.model.selectedCatagory==='Page'){
-                $scope.model.selectedPage=false;
+                
             }else if($scope.model.selectedCatagory=== 'Article'){
                 $scope.model.selectedArticle=false;
             }
-        }
+        }*/
     }
 
     $scope.selectUser=(user)=>{
