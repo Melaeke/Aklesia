@@ -134,21 +134,20 @@
                 <label for="page">Page to upload in</label>
                 <select ng-model="model.article.page" class="selectpicker form-control">
                     <option value selected disabled>--Please select The content Type--</option>
-                    <option ng-repeat="page in model.allPages" value="{{page}}">{{page.name}}
+                    <option ng-repeat="page in model.allPages" value="{{page._id}}">{{page.name}}
                     </option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="shortDescription">shortDescription</label>
-                <textarea  type="" class="form-control" id="shortDescription" ng-model="model.article.shortDescription"/>
-            </div>
-
             <div class="form-group" ng-if="model.article.type === 'Audio' || model.article.type === 'Video' || model.article.type === 'Text'">
-                <label class="btn btn-primary" for="thumbnailPicture">
-                    <input id="thumbnailPicture" type="file" style="display:none" onchange="$('#thumbnailPicture-file-info').html(this.files[0].name)" ng-model="model.article.thumbnailPicture">
-                    Upload thumbnail picture
+                <label class="btn btn-primary" for="thumbnail">
+                    <input file-directive-model ="model.article.thumbnail" id="thumbnail" type="file" style="display:none" >
+                    Upload Thumbnail Picture
                 </label>
-                <span class="label label-info" id="thumbnailPicture-file-info"></span>
+                <span class="label label-info" id="thumbnail-file-info">{{model.article.thumbnail.name?model.article.thumbnail.name:model.article.thumbnailName}}</span>
+            </div>
+            <div class="form-group">
+                <label for="shortDescription">Short Description</label>
+                <textarea  type="" class="form-control" id="shortDescription" ng-model="model.article.shortDescription"/>
             </div>
 
             <div class="form-group" ng-if="model.article.type==='Text'">
@@ -157,26 +156,34 @@
             </div>
             <div class="form-group" ng-if="model.article.type === 'Video'">
                 <label class="btn btn-primary" for="video">
-                    <input id="video" type="file" style="display:none" onchange="$('#video-file-info').html(this.files[0].name)" ng-model="model.article.video">
+                    <input file-directive-model ="model.article.file" id="video" type="file" style="display:none" >
                     Upload Video
                 </label>
-                <span class="label label-info" id="video-file-info"></span>
+                <span class="label label-info" id="video-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
             </div>
 
             <div class="form-group" ng-if="model.article.type === 'Audio'">
                 <label class="btn btn-primary" for="audio">
-                    <input id="audio" type="file" style="display:none" onchange="$('#audio-file-info').html(this.files[0].name)" ng-model="model.article.audio">
+                    <input file-directive-model ="model.article.file" id="audio" type="file" style="display:none" >
                     Upload Audio
                 </label>
-                <span class="label label-info" id="audio-file-info"></span>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
             </div>
 
             <div class="form-group" ng-if="model.article.type === 'Picture'">
                 <label class="btn btn-primary" for="picture">
-                    <input id="picture" type="file" style="display:none" onchange="$('#picture-file-info').html(this.files[0].name)" ng-model="model.article.picture">
+                    <input file-directive-model ="model.article.file" id="picture" type="file" style="display:none" >
                     Upload Picture
                 </label>
-                <span class="label label-info" id="picture-file-info"></span>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+            </div>
+
+            <div class="form-group" ng-if="model.article.type === 'Resources'">
+                <label class="btn btn-primary" for="audio">
+                    <input file-directive-model ="model.article.file" id="audio" type="file" style="display:none" >
+                    Upload Audio
+                </label>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
             </div>
             <button type="button" class="btn btn-success" ng-click="save('Article');">Save</button>
             <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Article');">Delete Article</button>

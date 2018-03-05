@@ -60,7 +60,7 @@ exports.create = (req,res)=>{
 };
 
 exports.getOne = (req,res)=>{
-    Article.findOne({"_id":req.params.articleId})
+    Article.findOne({_id:req.params.articleId})
         //.populate('user') this keeps returning user password
         .exec((err,article)=>{
             if(err){
@@ -119,4 +119,48 @@ exports.articlesPerPage=(req,res)=>{
             res.json(articlesInPage);
         }
     })
+}
+
+exports.uploadFile=(req,res)=>{
+    if(req.files.length>0){//check if there actually exists files.
+        Article.findOne({_id:req.query.articleId},(err,article)=>{
+            if(err){
+                console.error("Can not find article");
+                res.json({"Error":err});
+            }
+            if(req.query.file){
+                article.fileName=req.query.file;
+                console.log("files are ",req.files);
+                console.log("file is ",req.file);
+                console.log("query string is ",req.query);
+                req.files.forEach(file => {
+                    if(file.originalname===req.query.file){
+                        //this is the file
+                        article.filePath=file.path;
+                    }
+                });
+            }
+            if(req.query.file){
+                article.thumbnailName=req.query.thumbnail;
+                req.files.forEach(file => {
+                    if(file.originalname===req.query.thumbnail){
+                        //this is the file
+                        article.thumbnailPath=file.path;
+                    }
+                });
+            }
+            console.log("Saving article ",article);
+            article.save(function (err,article){
+                if(err){
+                    console.error("Error occured during saving filename to article");
+                    res.json({"Error":err})
+                }
+                res.json(article);
+            });
+        })
+    }
+}
+exports.onFileError=(err,next)=>{
+    console.error("error uploading file ",err);
+    next();
 }

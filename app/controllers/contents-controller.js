@@ -6,7 +6,7 @@
 
 var mainApp = angular.module('aklesia');
 
-mainApp.controller('contentsController',function ($scope,$http){
+mainApp.controller('contentsController',function ($scope,$http,networkService){
     initialize($scope,$http);
 
     $scope.action=(actionType)=>{
@@ -19,7 +19,7 @@ mainApp.controller('contentsController',function ($scope,$http){
         switch($scope.model.selectedCatagory){
             case "User":{
                 if(!$scope.model.allUserTypes){
-                    fetchElements($scope,$http,"api/userTypes")
+                    networkService.getFromServer("api/userTypes")
                         .then((allUserTypes)=>{
                             $scope.model.allUserTypes=allUserTypes;
                         },(error)=>{
@@ -30,7 +30,7 @@ mainApp.controller('contentsController',function ($scope,$http){
                     $scope.model.selectedUser=true;
                 }else{
                     //because deletion might occur it is better to get this from server everyime.
-                    fetchElements($scope,$http,"api/users?fields=_id,firstName,userType,email")
+                    networkService.getFromServer("api/users?fields=_id,firstName,userType,email")
                         .then((allUsers)=>{
                             //this is a success
                             $scope.model.allUsers=allUsers;
@@ -46,7 +46,7 @@ mainApp.controller('contentsController',function ($scope,$http){
                 //if we are creating a new page there is nothing to do here only when editing a field.
                 if(actionType==="editExisting"){
                     $scope.model.selectedArticle=false;
-                    fetchElements($scope,$http,"api/pages")
+                    networkService.getFromServer("api/pages")
                         .then((allPages)=>{
                             $scope.model.allPages=allPages;      
                         },(error)=>{
@@ -58,7 +58,7 @@ mainApp.controller('contentsController',function ($scope,$http){
                 }
                 break;
             }case "Article":{
-                fetchElements($scope,$http,"api/articleTypes")
+                networkService.getFromServer("api/articleTypes")
                     .then((allArticleTypes)=>{
                         $scope.model.allArticleTypes=allArticleTypes;
                     },(error)=>{
@@ -66,7 +66,7 @@ mainApp.controller('contentsController',function ($scope,$http){
                     });
                 //if all pages is not loaded, load it now.
                 if(!$scope.model.allPages){
-                    fetchElements($scope,$http,"api/pages")
+                    networkService.getFromServer("api/pages")
                         .then((allPages)=>{
                             $scope.model.allPages=allPages;
                         },(error)=>{
@@ -79,7 +79,7 @@ mainApp.controller('contentsController',function ($scope,$http){
                 }else{
                     $scope.model.selectedArticle=false;
                     //fetch all articles.
-                    fetchElements($scope,$http,"api/articles/?fields=title,type,page&pageSize=0")
+                    networkService.getFromServer("api/articles/?fields=title,type,page&pageSize=0")
                     .then((allArticles)=>{
                         $scope.model.allArticles=allArticles;
                     },(error)=>{
@@ -89,28 +89,12 @@ mainApp.controller('contentsController',function ($scope,$http){
                 }
             }
         }
-
-
-/*
-        if(actionType === 'createNew'){
-             if($scope.model.selectedCatagory==='Page'){
-                $scope.model.selectedPage=true;
-            }else if($scope.model.selectedCatagory=== 'Article'){
-                $scope.model.selectedArticle=true;
-            }
-        }else if(actionType === 'editExisting'){
-            if($scope.model.selectedCatagory==='Page'){
-                
-            }else if($scope.model.selectedCatagory=== 'Article'){
-                $scope.model.selectedArticle=false;
-            }
-        }*/
     }
 
     $scope.selectUser=(user)=>{
         hideAllMessages($scope);
         $scope.model.user=user;
-        fetchElements($scope,$http,"api/users/"+user._id)
+        networkService.getFromServer("api/users/"+user._id)
             .then((user)=>{
                 $scope.model.user=user;
             },(error)=>{
@@ -125,7 +109,7 @@ mainApp.controller('contentsController',function ($scope,$http){
         $scope.model.selectedPage=true;
 
         //only fetch id, title, type for minimizing network activity
-        fetchElements($scope,$http,"api/articlesPerPage/"+page._id+"?fields=_id,title,type")
+        networkService.getFromServer("api/articlesPerPage/"+page._id+"?fields=_id,title,type")
             .then((articlesInPage)=>{
                 $scope.model.articlesInPage=articlesInPage;
             },(error)=>{
@@ -135,14 +119,17 @@ mainApp.controller('contentsController',function ($scope,$http){
     }
 
     $scope.selectArticle=(article)=>{
-        $scope.model.article=article;
-        $scope.model.selectedArticle=true;
-        console.log($scope.model.selectedArticle);
+        hideAllMessages($scope);
+        
+        networkService.getFromServer("api/articles/"+article._id)
+            .then((article)=>{
+                $scope.model.article=article;
+                $scope.model.selectedArticle=true;
+            },(error)=>{
+                console.error(error);
+                showErrorMessage($scope,"Unable to contact Server");
+            })
     }
-
-    $scope.$watch('model.action',function(){
-        console.log("action",$scope.model.action);
-    });
 
 
     $scope.$watch('model.selectedCatagory',function(){
@@ -178,13 +165,23 @@ mainApp.controller('contentsController',function ($scope,$http){
                 }else{
                     deleteFromServer($scope,$http,"api/pages/"+page._id)
                         .then((response)=>{
-                            showStatusMessage($scope,"Successfully deleted user");
+                            showStatusMessage($scope,"Successfully deleted Page");
                             halfInitialize($scope,true);
                         },(error)=>{
-                            console.error("Error deleteing user ",error);
-                            showErrorMessage($scope,"Error deleting user");
+                            console.error("Error deleteing Page ",error);
+                            showErrorMessage($scope,"Error deleting Page");
                     });
                 }
+            }case 'Article':{
+                var article=$scope.model.article;
+                deleteFromServer($scope,$http,"api/articles/"+article._id)
+                    .then((response)=>{
+                        showStatusMessage($scope,"Successfully deleted Article");
+                        halfInitialize($scope,true);
+                    },(error)=>{
+                        console.error("Error deleting article",error)
+                        showErrorMessage($scope,"Error deleting Article");
+                    })
             }
         }
     }
@@ -193,11 +190,14 @@ mainApp.controller('contentsController',function ($scope,$http){
     $scope.save=(whatToSave)=>{
         switch(whatToSave){
             case 'User':{
-                saveUser($scope,$http);
+                saveUser($scope,$http,networkService);
                 break;
             }
             case 'Page':{
                 savePage($scope,$http)
+                break;
+            }case 'Article':{
+                saveArticle($scope,$http,networkService);
                 break;
             }
         }
@@ -217,37 +217,6 @@ var halfInitialize=($scope,leaveMessageOn)=>{
         hideAllMessages($scope);
     }
 
-}
-
-var sendData=($scope,$http,url,dataToSend)=>{
-    console.log(dataToSend);
-    return $http({
-        url:url,
-        method: $scope.model.actionType==="createNew"?"POST":"PUT",
-        data : dataToSend
-    }).then((response)=>{
-        console.log("the response is ",response);
-        return response;
-    }).catch((error)=>{
-        throw(error);
-    });
-}
-
-
-/**
- * This function performs all the necessary get requests.
- * @param {*}  scope the global scope of angular
- * @param {*}  http the http module of angular 
- * @param {*} url the url to send the link to.
- */
-var fetchElements=($scope,$http,url)=>{
-    //fetch all users with only fields id, firstName, userType and email.
-    return $http.get(url).then((response)=>{
-        return response.data;
-    }).catch((error)=>{
-        console.log("error with request ",error);
-        throw(error);
-    });
 }
 
 var deleteFromServer=($scope,$http,url)=>{
@@ -276,7 +245,7 @@ var hideAllMessages=($scope)=>{
     $scope.model.showErrorMessage=false;
 }
 
-var saveUser=($scope,$http)=>{
+var saveUser=($scope,$http,networkService)=>{
     var user=$scope.model.user;
     if(!(user.email && user.firstName && user.lastName) || ($scope.model.actionType==="createNew" && !user.password)){
         if(!user.email){
@@ -287,28 +256,32 @@ var saveUser=($scope,$http)=>{
         console.log("all necessary inputs not provided. Not saving user");
         return;
     }
-    var objectToSave={
+    var userObject={
         "firstName":user.firstName,
         "email":user.email,
-        "lastName":user.lastName,
-        "password":user.password
-    };
+        "lastName":user.lastName
+    }
+
     var url="api/users";
     if(user.userType){
-        objectToSave.userType=user.userType;
+        userObject.userType=user.userType;
     }
     if(user._id){
-        objectToSave._id=user._id;
+        userObject._id=user._id;
         url=url+"/"+user._id;
     }
-    sendData($scope,$http,url,objectToSave)
-        .then((response)=>{
-            showStatusMessage($scope,"Successfully saved user.");
-            halfInitialize($scope,true);
-        },(error)=>{
-            showErrorMessage($scope,"Error saving user.");
-            console.error(error);
-        })
+
+    if(user.password){
+        userObject.password=user.password;
+    }
+
+    networkService.sendObjectToUrl(url,userObject,user._id ? "PUT" : "POST")
+    .then((response)=>{
+        showStatusMessage($scope,"Successfully saved user");
+        halfInitialize($scope,true);
+    },(error)=>{
+        console.error("Error putting data to server",error);
+    })
 }
 
 var savePage=($scope,$http)=>{
@@ -329,7 +302,8 @@ var savePage=($scope,$http)=>{
         objectToSave._id=page._id;
         url=url+"/"+page._id;
     }
-    sendData($scope,$http,url,objectToSave)
+    networkService.
+    sendObjectToUrl(url,objectToSave,objectToSave._id?"PUT":"POST")
         .then((response)=>{
             showStatusMessage($scope,"Successfully saved Page");
             halfInitialize($scope,true);
@@ -338,3 +312,125 @@ var savePage=($scope,$http)=>{
             console.error(error);
         });
 }
+
+var saveArticle=($scope,$http,networkService)=>{
+    //when saving an article first save the articles text section. i.e the sections which are not files.
+    //then after saving the text sections, using the id of the created article, save the thumbnail and the file.
+    var article=$scope.model.article;
+
+    //check for all necessary fields.
+    if(!(article.title)){
+        showErrorMessage($scope,"Please provide a title");
+        return;
+    }
+    if(!(article.type)){
+        showErrorMessage($scope,"Please select the Article Type");
+        return;
+    }
+    if(!(article.page)){
+        showErrorMessage($scope,"Please select the page to upload to");
+        return;
+    }
+    if(article.type==='Picture' || article.type ==='Video' || article.type=== 'Audio' || article.type==='Resource'){
+        if($scope.model.actionType==="createNew"){
+            //if we are creating new article we need to check if a file is uploaded before sending a request.
+            if(!(article.file.name)){
+                showErrorMessage($scope,"Please select a Picture to upload");
+                return;
+            }
+        }
+    }
+    if(article.type ==='Text'){
+        if(!(article.content)){
+            showErrorMessage($scope,"Please provide a content before uploading")
+            return;
+        }
+    }
+
+    var url="api/articles";
+    var objectToSave={
+        "title":article.title,
+        "type":article.type,
+        "page":article.page
+    }
+
+    if(article.shortDescription){
+        objectToSave.shortDescription=article.shortDescription;
+    }
+    if(article.content){
+        objectToSave.content=article.content;
+    }
+    if(article._id){
+        objectToSave._id=article._id;
+        url=url+"/"+article._id;
+    }
+
+
+
+    networkService.sendObjectToUrl(url,objectToSave,objectToSave._id?"PUT":"POST")
+        .then((response)=>{
+            console.log("response is ",response);
+            //here the metadata is saved now check if there exists a file to save. 
+            var thumbnailChanged=false;
+            var fileChanged=false;
+            //if the article.file exists and have the value file.name, it means that the user has changed it. 
+            if(article.file && article.file.name){
+                console.log("File changed");
+                fileChanged=true;
+            }
+            //if the thumbnail exists and have the value, thumbnail.name it means that the user has changed it.
+            if(article.thumbnail && article.thumbnail.name){
+                console.log("thumbnail changed");
+                thumbnailChanged=true;
+            }
+
+            if(thumbnailChanged || fileChanged){
+                //save the changed data to server.
+                url="api/uploadFile?articleId="+response._id;
+                var formData=new FormData();
+                if(thumbnailChanged){
+                    formData.append("file",article.thumbnail);
+                    url=url+"&thumbnail="+article.thumbnail.name;
+                }
+                if(fileChanged){
+                    formData.append("file",article.file);
+                    url=url+"&file="+article.file.name;
+                }
+
+                networkService.postFormDataToUrl(url,formData)
+                    .then((response)=>{
+                        console.log(response);
+                        showStatusMessage($scope,"Saved Article Successfully");
+                        halfInitialize($scope,true);
+                    },(error)=>{
+                        console.error('error');
+                        showErrorMessage($scope,"Saved Article but could not save Files.");
+                    })
+            }
+            else{
+                showStatusMessage($scope,"Saved Article successfully");
+                halfInitialize($scope,true);
+            }
+
+        },(error)=>{
+            showErrorMessage($scope,"Could not save Article");
+        })
+}
+
+
+mainApp.controller('fileController',['$scope','fileUpload',function($scope,fileUpload){
+    $scope.uploadFile=function(){
+        var file=$scope.myFile;
+
+        console.log('file is ');
+        console.dir(file);
+
+        var uploadUrl="/fileUpload";
+        fileUpload.uploadFileToUrl(file,uploadUrl);
+    }
+
+    $scope.$watch('myFile',()=>{
+        console.log("file changed ",$scope.myFile);
+        console.dir($scope.myFile);
+    })
+}])

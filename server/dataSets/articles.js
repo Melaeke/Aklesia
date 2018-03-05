@@ -7,10 +7,14 @@ var ArticleSchema = new Schema({
     shortDescription: {type: String, max: 100},
     content:{type: String},
     created_time: {type: Date,default: Date.now},
-    user: {type: Schema.ObjectId, ref: 'User',required: true},
+    user: {type: Schema.ObjectId, ref: 'User'},
     type:{type: String, required: true, enum: ['Picture','Text','Video','Live','Audio','Resources'],default: 'Text'},
     lastUpdated: {type: Date},
-    page: {type:Schema.ObjectId,ref:'Page',required: true}
+    page: {type:Schema.ObjectId,ref:'Page',required: true},
+    thumbnailName : {type: String},
+    thumbnailPath : {type: String},
+    filePath : {type: String},
+    fileName : {type: String}
 });
 
 ArticleSchema.pre('save',function(next){
