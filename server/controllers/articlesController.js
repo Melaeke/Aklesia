@@ -130,9 +130,6 @@ exports.uploadFile=(req,res)=>{
             }
             if(req.query.file){
                 article.fileName=req.query.file;
-                console.log("files are ",req.files);
-                console.log("file is ",req.file);
-                console.log("query string is ",req.query);
                 req.files.forEach(file => {
                     if(file.originalname===req.query.file){
                         //this is the file

@@ -10,7 +10,7 @@ var ArticleSchema = new Schema({
     user: {type: Schema.ObjectId, ref: 'User'},
     type:{type: String, required: true, enum: ['Picture','Text','Video','Live','Audio','Resources'],default: 'Text'},
     lastUpdated: {type: Date},
-    page: {type:Schema.ObjectId,ref:'Page',required: true},
+    page: {type:Schema.ObjectId,ref:'Page'},
     thumbnailName : {type: String},
     thumbnailPath : {type: String},
     filePath : {type: String},

@@ -194,7 +194,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
                 break;
             }
             case 'Page':{
-                savePage($scope,$http)
+                savePage($scope,$http,networkService)
                 break;
             }case 'Article':{
                 saveArticle($scope,$http,networkService);
@@ -284,7 +284,7 @@ var saveUser=($scope,$http,networkService)=>{
     })
 }
 
-var savePage=($scope,$http)=>{
+var savePage=($scope,$http,networkService)=>{
     var page=$scope.model.page;
 
     if(!(page.name)){
@@ -350,8 +350,7 @@ var saveArticle=($scope,$http,networkService)=>{
     var url="api/articles";
     var objectToSave={
         "title":article.title,
-        "type":article.type,
-        "page":article.page
+        "type":article.type
     }
 
     if(article.shortDescription){
@@ -369,10 +368,12 @@ var saveArticle=($scope,$http,networkService)=>{
 
     networkService.sendObjectToUrl(url,objectToSave,objectToSave._id?"PUT":"POST")
         .then((response)=>{
-            console.log("response is ",response);
+
             //here the metadata is saved now check if there exists a file to save. 
             var thumbnailChanged=false;
             var fileChanged=false;
+            //if it is a new article we are trying to create we need the id it created it with for further process
+            article._id=response._id;
             //if the article.file exists and have the value file.name, it means that the user has changed it. 
             if(article.file && article.file.name){
                 console.log("File changed");
@@ -399,17 +400,32 @@ var saveArticle=($scope,$http,networkService)=>{
 
                 networkService.postFormDataToUrl(url,formData)
                     .then((response)=>{
-                        console.log(response);
-                        showStatusMessage($scope,"Saved Article Successfully");
-                        halfInitialize($scope,true);
+                        //here add article to page
+                        var newUrl="api/addArticleToPage?articleId"+article._id+"&pageId"+article.page;
+                        networkService.sendObjectToUrl(newUrl,null,"POST")
+                            .then((response)=>{
+                                showStatusMessage($scope,"Saved Article Successfully");
+                                halfInitialize($scope,true);
+                            },(error)=>{
+                                showErrorMessage($scope,"savedArticle and file, but could not upload to page");
+                                console.error('error');
+                            })
                     },(error)=>{
                         console.error('error');
                         showErrorMessage($scope,"Saved Article but could not save Files.");
                     })
             }
             else{
-                showStatusMessage($scope,"Saved Article successfully");
-                halfInitialize($scope,true);
+                //here add article to page.
+                var newUrl="api/addArticleToPage?articleId="+article._id+"&pageId="+article.page;
+                networkService.sendObjectToUrl(newUrl,null,"POST")
+                    .then((response)=>{
+                        showStatusMessage($scope,"Saved Article Successfully");
+                        halfInitialize($scope,true);
+                    },(error)=>{
+                        showErrorMessage($scope,"savedArticle and file, but could not upload to page");
+                        console.error('error');
+                })
             }
 
         },(error)=>{
@@ -434,3 +450,4 @@ mainApp.controller('fileController',['$scope','fileUpload',function($scope,fileU
         console.dir($scope.myFile);
     })
 }])
+
