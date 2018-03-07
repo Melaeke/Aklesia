@@ -172,6 +172,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
                             showErrorMessage($scope,"Error deleting Page");
                     });
                 }
+                break;
             }case 'Article':{
                 var article=$scope.model.article;
                 deleteFromServer($scope,$http,"api/articles/"+article._id)
@@ -182,6 +183,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
                         console.error("Error deleting article",error)
                         showErrorMessage($scope,"Error deleting Article");
                     })
+                break;
             }
         }
     }
