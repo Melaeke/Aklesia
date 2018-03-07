@@ -132,14 +132,13 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
     }
 
 
-    $scope.$watch('model.selectedCatagory',function(){
+    $scope.changeCatagory=()=>{
         //when changing catagory, reinitialize everything.
         $scope.model.action="";
         $scope.model.selectedAction=false;
         $scope.model.selectedPage=false;
 
-        console.log("Selected Catagory",$scope.model.selectedCatagory);
-    });
+    };
 
     $scope.cancel=()=>{
         halfInitialize($scope,false);
@@ -204,6 +203,12 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
             }
         }
     }
+    $scope.selectArticleInPage=(article)=>{
+        $scope.model.selectedCatagory="Article";
+        $scope.model.selectedAction="Article";
+        $scope.action("editExisting");
+        $scope.selectArticle(article);
+    }
 })
 
 var initialize=($scope,$http)=>{
@@ -214,6 +219,7 @@ var initialize=($scope,$http)=>{
 var halfInitialize=($scope,leaveMessageOn)=>{
     $scope.model.selectUser=false;
     $scope.model.selectedPage=false;
+    $scope.model.selectedArticle=false;
     $scope.action("editExisting");
     if(leaveMessageOn===false){
         hideAllMessages($scope);

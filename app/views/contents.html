@@ -11,7 +11,7 @@
         <!--first user has to choose which element to edit-->
         <div class="form-group">
             <label for="catagory">Catagory</label>
-            <select ng-model="model.selectedCatagory" class="selectpicker form-control">
+            <select ng-model="model.selectedCatagory" class="selectpicker form-control" ng-change="changeCatagory()">
                 <option value selected disabled>--Please select an elelement--</option>
                 <option ng-repeat="catagory in model.allCatagories" value="{{catagory}}">{{catagory}}
                 </option>
