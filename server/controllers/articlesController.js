@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Article = require('../dataSets/articles');
+var Page = require('../dataSets/pages');
 
 exports.getAll = (req,res)=>{
     //the default pageSize is 10. we can override it with api/articles?pageSize=xx
@@ -82,13 +83,36 @@ exports.update=(req,res)=>{
 };
 
 exports.delete = (req,res)=>{
-    Article.remove({_id:req.params.articleId},(err,article)=>{
-        if(err){
-            console.error(err);
-            res.send(err);
-        }
-        res.json({message:'article Successfully deleted'});
-    });
+    var articleId=req.params.articleId;
+    Article.findOne({_id:articleId})
+        .exec((err,article)=>{
+            var pageId=article.page;
+            Article.remove({_id:req.params.articleId},(err,article)=>{
+                if(err){
+                    console.error(err);
+                    res.send(err);
+                }
+                console.log("article after delition ",article)
+                //after deletion, remove article from page.articles list.
+                Page.findById(pageId,(err,pageToDeleteFrom)=>{
+                    if(err){
+                        res.send({"Error":"Unable to get page to delte from"});
+                        console.log(err);
+                        return;
+                    }
+        
+                    pageToDeleteFrom.articles.splice(pageToDeleteFrom.articles.indexOf(article._id),1);
+                    pageToDeleteFrom.save((err,pageToDeleteFrom)=>{
+                        if(err){
+                            res.send({"Error":"Unable to delete article from page but delted page"});
+                            console.log(err)
+                            return;
+                        }
+                        res.send({"Message":"Successfully delted article"});
+                    })
+                })
+            });
+        })
 };
 
 exports.articlesPerPage=(req,res)=>{
