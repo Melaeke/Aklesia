@@ -45,7 +45,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
             }case "Page":{
                 //if we are creating a new page there is nothing to do here only when editing a field.
                 if(actionType==="editExisting"){
-                    $scope.model.selectedArticle=false;
+                    $scope.model.selectedPage=false;
                     networkService.getFromServer("api/pages")
                         .then((allPages)=>{
                             $scope.model.allPages=allPages;      
