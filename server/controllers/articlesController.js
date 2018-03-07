@@ -103,11 +103,15 @@ exports.articlesPerPage=(req,res)=>{
             typesRequired=false;
         }
     }
+    console.log("Page id is ",pageId);
+    console.log("fields are ",fields);
     Article.find({"page":pageId},fields,(err,articlesInPage)=>{
         if(err){
             console.error(err);
             res.send({"Error":err});
         }
+        res.json(articlesInPage);
+        /*There is no point of populating articles in page because it is already populated above.
         if(typesRequired){
             Article.populate(articlesInPage,{path:"type"},function(err,articlesInPage){
                 if(err){
@@ -117,7 +121,7 @@ exports.articlesPerPage=(req,res)=>{
             });
         }else{
             res.json(articlesInPage);
-        }
+        }*/
     })
 }
 
