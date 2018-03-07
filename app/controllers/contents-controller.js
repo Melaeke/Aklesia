@@ -409,7 +409,7 @@ var saveArticle=($scope,$http,networkService)=>{
                 networkService.postFormDataToUrl(url,formData)
                     .then((response)=>{
                         //here add article to page
-                        var newUrl="api/addArticleToPage?articleId"+article._id+"&pageId"+article.page;
+                        var newUrl="api/addArticleToPage?articleId="+article._id+"&pageId="+article.page;
                         networkService.sendObjectToUrl(newUrl,null,"POST")
                             .then((response)=>{
                                 showStatusMessage($scope,"Saved Article Successfully");
