@@ -103,6 +103,12 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
         $scope.model.selectedUser=true;
     }
 
+    $scope.$watch("model.article.type",()=>{
+        if($scope.model.article.type==="Text"){
+            //this is included because the ng-if content will not be included in the dom at the moment this function is executed
+            setTimeout(()=>{$('#content').froalaEditor();},100);
+        }
+    })
     $scope.selectPage=(page)=>{
         hideAllMessages($scope);
         $scope.model.page=page;
@@ -186,7 +192,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
             }
         }
     }
-    
+  
 
     $scope.save=(whatToSave)=>{
         switch(whatToSave){
@@ -209,6 +215,20 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
         $scope.action("editExisting");
         $scope.selectArticle(article);
     }
+
+    //this is included to load the froala_editor package for the wysiwyg editor.
+    $scope.$on('$viewContentLoaded',function(){
+        console.log("loading external libraries");
+        networkService.getFromServer("node_modules/froala-editor/js/froala_editor.pkgd.min.js")
+            .then((script)=>{
+                let node=document.createElement('script');
+                node.text=script;
+                node.typed="type/javascript";
+                document.getElementsByTagName('head')[0].appendChild(node);
+                console.log("Loaded everything");
+                $('textarea').froalaEditor()
+            })
+    })
 })
 
 var initialize=($scope,$http)=>{
@@ -349,6 +369,7 @@ var saveArticle=($scope,$http,networkService)=>{
         }
     }
     if(article.type ==='Text'){
+        article.content = $('textarea#content').val();
         if(!(article.content)){
             showErrorMessage($scope,"Please provide a content before uploading")
             return;

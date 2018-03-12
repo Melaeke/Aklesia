@@ -7,6 +7,12 @@
     perform email validation and check if all elements exist before sending for submit.
 -->
 <div>
+    <!-- Download script only when they are required. These are here becauase they won't be used anywhere elese, it will minimize bandwidth for other pages.-->
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/froala-editor/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+
+    
     <ng-form name="mainForm" >
         <!--first user has to choose which element to edit-->
         <div class="form-group">
@@ -147,12 +153,12 @@
             </div>
             <div class="form-group">
                 <label for="shortDescription">Short Description</label>
-                <textarea  type="" class="form-control" id="shortDescription" ng-model="model.article.shortDescription"/>
+                <textarea class="form-control" id="shortDescription" ng-model="model.article.shortDescription"/>
             </div>
 
             <div class="form-group" ng-if="model.article.type==='Text'">
                 <label for="content">Content</label>
-                <input class="form-control" id="content" ng-model="model.article.content"/>
+                <textarea class="form-control" id="content" ng-model="model.article.content"/>
             </div>
             <div class="form-group" ng-if="model.article.type === 'Video'">
                 <label class="btn btn-primary" for="video">
@@ -216,5 +222,5 @@
 
     </ng-form>
 
-    
+
 </div>
