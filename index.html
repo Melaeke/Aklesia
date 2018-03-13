@@ -27,13 +27,13 @@
             <a class="nav-link dropdown-toggle" id="pagesDropDownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</span>
             </a>
             <div class="dropdown-menu" aria-labelledby="pagesDropDownLink" id="pagesDropDown">
-              <a class="nav-link dropdown-item" ng-repeat="page in model.allPages" href="/articles/{{page._id}}">{{page.name}}</a>
+              <a class="nav-link dropdown-item" ng-repeat="page in model.allPages" href="#!articles/page/{{page._id}}">{{page.name}}</a>
             </div>
           </li>
           <li class="nav-item ">
-            <a class="nav-link dropdown-toggle" id="contentsDropDownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Contents</a>
-            <div class="dropdown-menu" aria-labelledby="contentsDropDownLink" id="contentsDropDown">
-              <a class="nav-link dropdown-item" ng-repeat="articleType in model.allArticleTypes" href="/articles/contentType={{articleType}}">{{articleType}}</a>
+            <a class="nav-link dropdown-toggle" id="articlesDropDownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Article Type</a>
+            <div class="dropdown-menu" aria-labelledby="articlesDropDownLink" id="articlesDropDown">
+              <a class="nav-link dropdown-item" ng-repeat="articleType in model.allArticleTypes" href="#!articles/articleType/{{articleType}}">{{articleType}}</a>
             </div>
           </li>
           <li class="nav-item ">

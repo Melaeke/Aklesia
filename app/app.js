@@ -13,6 +13,9 @@ app.config(($routeProvider)=>{
     }).when("/contents",{
         templateUrl: "app/views/contents.html",
         controller: "contentsController"
+    }).when("/articles/:filterType/:id",{
+        templateUrl:"app/views/contents.html",
+        controller:"contentsController"
     }).when("/notifications",{
         templateUrl: "app/views/notifications.html",
         controller: "notificationsController"

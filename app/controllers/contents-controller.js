@@ -6,8 +6,10 @@
 
 var mainApp = angular.module('aklesia');
 
-mainApp.controller('contentsController',function ($scope,$http,networkService){
+mainApp.controller('contentsController',function ($scope,$http,networkService, $routeParams){
     initialize($scope,$http);
+    console.log($routeParams.filterType);
+    console.log($routeParams.id);
 
     $scope.action=(actionType)=>{
         $scope.model.actionType=actionType;
@@ -104,7 +106,7 @@ mainApp.controller('contentsController',function ($scope,$http,networkService){
     }
 
     $scope.$watch("model.article.type",()=>{
-        if($scope.model.article.type==="Text"){
+        if($scope.model.article && $scope.model.article.type==="Text"){
             //this is included because the ng-if content will not be included in the dom at the moment this function is executed
             setTimeout(()=>{$('#content').froalaEditor();},100);
         }
