@@ -7,6 +7,9 @@ app.config(($routeProvider)=>{
         templateUrl:"app/views/index.html"
     }).when("/home",{
         templateUrl:"app/views/index.html"
+    }).when("/admin",{
+        templateUrl: "app/views/admin.html",
+        controller: "adminController"
     }).when("/pages",{
         templateUrl: "app/views/pages.html",
         controller: "pagesController"
@@ -14,7 +17,7 @@ app.config(($routeProvider)=>{
         templateUrl: "app/views/contents.html",
         controller: "contentsController"
     }).when("/articles/:filterType/:id",{
-        templateUrl:"app/views/contents.html",
+        templateUrl:"app/views/articles.html",
         controller:"contentsController"
     }).when("/notifications",{
         templateUrl: "app/views/notifications.html",

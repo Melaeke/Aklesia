@@ -18,9 +18,8 @@
     </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="nav navbar-nav">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="/">Home
-              <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item  dropdown">
@@ -35,6 +34,9 @@
             <div class="dropdown-menu" aria-labelledby="articlesDropDownLink" id="articlesDropDown">
               <a class="nav-link dropdown-item" ng-repeat="articleType in model.allArticleTypes" href="#!articles/articleType/{{articleType}}">{{articleType}}</a>
             </div>
+          </li>
+          <li class="nav-item" >
+            <a class="nav-link" href="#!admin">Admin</a>
           </li>
           <li class="nav-item ">
             <a class="nav-link" href="#!notifications"> Notifications</a>
@@ -63,7 +65,7 @@
 <script type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script> 
 <script type="text/javascript" src="app/app.js"></script>
 <script type="text/javascript" src="app/controllers/pages-controller.js"></script>
-<script type="text/javascript" src="app/controllers/contents-controller.js"></script>
+<script type="text/javascript" src="app/controllers/admin-controller.js"></script>
 <script type="text/javascript" src="app/controllers/notifications-controller.js"></script>
 <script type="text/javascript" src="app/controllers/index-controller.js"></script>
 <script type="text/javascript" src="app/directives/directives.js"></script>

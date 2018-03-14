@@ -1,9 +1,10 @@
 
 var mainApp = angular.module('aklesia');
 
-mainApp.controller('indexController',function ($scope,$http,networkService){
+mainApp.controller('indexController',function ($scope,$http,networkService,$routeParams){
     
     initializeHeader($scope,networkService)
+    console.log($routeParams);
 });
 
 var initializeHeader=($scope,networkService)=>{

@@ -6,7 +6,7 @@
 
 var mainApp = angular.module('aklesia');
 
-mainApp.controller('contentsController',function ($scope,$http,networkService, $routeParams){
+mainApp.controller('adminController',function ($scope,$http,networkService, $routeParams){
     initialize($scope,$http);
     console.log($routeParams.filterType);
     console.log($routeParams.id);
