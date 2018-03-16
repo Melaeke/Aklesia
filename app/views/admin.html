@@ -1,0 +1,223 @@
+<!--
+
+    TODO list
+
+    perform validation before submitting form
+
+    perform email validation and check if all elements exist before sending for submit.
+-->
+<div>
+    <!-- Download script only when they are required. These are here becauase they won't be used anywhere elese, it will minimize bandwidth for other pages.-->
+
+    <script type="text/javascript" src="app/lib/ckeditor/ckeditor.js"></script>
+    <ng-form name="mainForm" >
+        <!--first user has to choose which element to edit-->
+        <div class="form-group">
+            <label for="catagory">Catagory</label>
+            <select ng-model="model.selectedCatagory" class="selectpicker form-control" ng-change="changeCatagory()">
+                <option value selected disabled>--Please select an elelement--</option>
+                <option ng-repeat="catagory in model.allCatagories" value="{{catagory}}">{{catagory}}
+                </option>
+            </select>
+        </div>
+
+        <!--next user has to choose between editing an existing element or creating a new one-->
+        <div class="form-group" ng-if="model.selectedCatagory">
+            <button type="button" class="btn btn-primary btn-lg " ng-click="action('editExisting');">Edit Existing</button>
+            <button type="button" class="btn btn-primary btn-lg float-right" ng-click="action('createNew');">Create new</button>
+        </div>
+
+
+        <!-- ---------------------------- User editing form--------------- -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'User' && model.selectedAction && model.selectedUser " ng-model="model.user">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" class="form-control" id="email" ng-model="model.user.email" ng-disabled="model.actionType !== 'createNew'"/>
+            </div>
+            <div class="form-group" >
+                <label for="firstName">First Name *</label>
+                <input type="text" class="form-control" id="firstName" ng-model="model.user.firstName"/>
+            </div>
+            
+            <div class="form-group" >
+                <label for="lastName">Last Name *</label>
+                <input type="text" class="form-control" id="lastName" ng-model="model.user.lastName"/>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" class="form-control" id="password" ng-model="model.user.password"/>
+            </div>
+
+            <div class="form-group" >
+                <label for="userType">userType</label>
+                <select ng-model="model.user.userType" class="selectpicker form-control">
+                    <option value selected disabled>--Please select a user Type</option>
+                    <option ng-repeat="userType in model.allUserTypes" value="{{userType}}">{{userType}}</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-success" ng-click="save('User');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('User');">Delete User</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
+        </div>
+
+
+        <!-- -------------------------------User listing table ------------------------ -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'User' && model.selectedAction && !model.selectedUser">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th>First Name</th><th>User Type</th><th>Email</th></tr>
+                </thead>
+                <tr ng-repeat="user in model.allUsers" ng-click="selectUser(model.allUsers[$index])">
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.userType}}</td>
+                    <td>{{user.email}}</td>
+                </a>
+                </tr>
+            </table>
+        </div>
+        
+
+
+        <!-- -----------------------------Page Editing form ------------------------- -->
+
+        <div class="form-group" ng-if="model.selectedCatagory === 'Page' && model.selectedAction && model.selectedPage" ng-model="model.page">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" ng-model="model.page.name"/>
+            </div>
+            <div class="form-group" ng-if="model.actionType === 'editExisting'">
+                <label for="articleList">Articles in page</label>
+                <table class="table table-hover table-bordered" id="articleList">
+                    <thead>
+                        <tr><th>Title</th><th>Type</th></tr>
+                    </thead>
+                    <tr ng-repeat="article in model.articlesInPage" ng-click="selectArticleInPage(model.articlesInPage[$index])">
+                        <td>{{article.title}}</td>
+                        <td>{{article.type}}</td>
+                    </tr>
+                </table>
+            </div>
+            <button type="button" class="btn btn-success" ng-click="save('Page');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Page');">Delete Page</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
+        </div>
+
+
+        <!-- --------------------------Page list form ---------------------------- -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'Page' && model.selectedAction && !model.selectedPage">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th>Page Name</th><th>Number of articles in Page</th></tr>
+                </thead>
+                <tr ng-repeat="page in model.allPages" ng-click="selectPage(model.allPages[$index])">
+                    <td>{{page.name}}</td>
+                    <td>{{page.articles.length}}</td>
+
+                </tr>
+            </table>
+        </div>
+
+        <!-- ---------------------------Articles Editing form --------------------------- -->
+        <div class="form-group"action ng-if=" model.selectedCatagory === 'Article' && model.selectedAction && model.selectedArticle" ng-model="model.article">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="name" ng-model="model.article.title"/>
+            </div>
+            <div class="form-group">
+                <label for="type">Article Type</label>
+                <select ng-model="model.article.type" class="selectpicker form-control">
+                    <option value selected disabled>--Please select The content Type--</option>
+                    <option ng-repeat="type in model.allArticleTypes" value="{{type}}">{{type}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="page">Page to upload in</label>
+                <select ng-model="model.article.page" class="selectpicker form-control">
+                    <option value selected disabled>--Please select The content Type--</option>
+                    <option ng-repeat="page in model.allPages" value="{{page._id}}">{{page.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group" ng-if="model.article.type === 'Audio' || model.article.type === 'Video' || model.article.type === 'Text'">
+                <label class="btn btn-primary" for="thumbnail">
+                    <input file-directive-model ="model.article.thumbnail" id="thumbnail" type="file" style="display:none" >
+                    Upload Thumbnail Picture
+                </label>
+                <span class="label label-info" id="thumbnail-file-info">{{model.article.thumbnail.name?model.article.thumbnail.name:model.article.thumbnailName}}</span>
+            </div>
+            <div class="form-group">
+                <label for="shortDescription">Short Description</label>
+                <textarea class="form-control" id="shortDescription" ng-model="model.article.shortDescription"/>
+            </div>
+
+            <div class="form-group" ng-if="model.article.type==='Text'">
+                <label for="content">Content</label>
+                <textarea class="form-control" id="content" ng-model="model.article.content"/>
+            </div>
+            <div class="form-group" ng-if="model.article.type === 'Video'">
+                <label class="btn btn-primary" for="video">
+                    <input file-directive-model ="model.article.file" id="video" type="file" style="display:none" >
+                    Upload Video
+                </label>
+                <span class="label label-info" id="video-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+            </div>
+
+            <div class="form-group" ng-if="model.article.type === 'Audio'">
+                <label class="btn btn-primary" for="audio">
+                    <input file-directive-model ="model.article.file" id="audio" type="file" style="display:none" >
+                    Upload Audio
+                </label>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+            </div>
+
+            <div class="form-group" ng-if="model.article.type === 'Picture'">
+                <label class="btn btn-primary" for="picture">
+                    <input file-directive-model ="model.article.file" id="picture" type="file" style="display:none" >
+                    Upload Picture
+                </label>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+            </div>
+
+            <div class="form-group" ng-if="model.article.type === 'Resources'">
+                <label class="btn btn-primary" for="audio">
+                    <input file-directive-model ="model.article.file" id="audio" type="file" style="display:none" >
+                    Upload Audio
+                </label>
+                <span class="label label-info" id="picture-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+            </div>
+            <button type="button" class="btn btn-success" ng-click="save('Article');">Save</button>
+            <button type="button" class="btn btn-danger" ng-hide="model.actionType === 'createNew'" ng-click="delete('Article');">Delete Article</button>
+            <button type="button" class="btn btn-primary float-right" ng-click="cancel();">Cancel</button>
+        </div>
+
+        <!-- --------------------------Articles list form ---------------------------- -->
+        <div class="form-group" ng-if="model.selectedCatagory === 'Article' && model.selectedAction && !model.selectedArticle">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr><th>Article Title</th><th>Article Type</th><th>Page</th></tr>
+                </thead>
+                <tr ng-repeat="article in model.allArticles" ng-click="selectArticle(model.allArticles[$index])">
+                    <td>{{article.title}}</td>
+                    <td>{{article.type}}</td>
+                    <td>{{article.page.name}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ----------------------------Error message viewer ------------------------ -->
+        <div class="form-group alert alert-danger" ng-if="model.showErrorMessage" >
+            <label >{{model.errorMessage}}</label>
+        </div>
+        <div class="form-group alert alert-success" ng-if="model.showStatusMessage" >
+            <label >{{model.statusMessage}}</label>
+        </div>
+
+
+
+    </ng-form>
+
+
+</div>

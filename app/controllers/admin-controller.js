@@ -108,7 +108,9 @@ mainApp.controller('adminController',function ($scope,$http,networkService, $rou
     $scope.$watch("model.article.type",()=>{
         if($scope.model.article && $scope.model.article.type==="Text"){
             //this is included because the ng-if content will not be included in the dom at the moment this function is executed
-            setTimeout(()=>{$('#content').froalaEditor();},100);
+            setTimeout(()=>{
+                CKEDITOR.replace( 'content' );
+            }, 100 );
         }
     })
     $scope.selectPage=(page)=>{
@@ -217,20 +219,6 @@ mainApp.controller('adminController',function ($scope,$http,networkService, $rou
         $scope.action("editExisting");
         $scope.selectArticle(article);
     }
-
-    //this is included to load the froala_editor package for the wysiwyg editor.
-    $scope.$on('$viewContentLoaded',function(){
-        console.log("loading external libraries");
-        networkService.getFromServer("node_modules/froala-editor/js/froala_editor.pkgd.min.js")
-            .then((script)=>{
-                let node=document.createElement('script');
-                node.text=script;
-                node.typed="type/javascript";
-                document.getElementsByTagName('head')[0].appendChild(node);
-                console.log("Loaded everything");
-                $('textarea').froalaEditor()
-            })
-    })
 })
 
 var initialize=($scope,$http)=>{
