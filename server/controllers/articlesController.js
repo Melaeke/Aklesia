@@ -118,35 +118,55 @@ exports.delete = (req,res)=>{
 exports.articlesPerPage=(req,res)=>{
     var pageId=req.params.pageId;
     var fields="";
-    var typesRequired=true;
+    var pageNumber=0;
+    var pageSize = 10;
     if(req.query.fields){
         fields=req.query.fields.split(',')
-        if(fields.indexOf("type">-1)){
-            typesRequired=true;
-        }else{
-            typesRequired=false;
-        }
     }
-    console.log("Page id is ",pageId);
-    console.log("fields are ",fields);
-    Article.find({"page":pageId},fields,(err,articlesInPage)=>{
-        if(err){
-            console.error(err);
-            res.send({"Error":err});
-        }
-        res.json(articlesInPage);
-        /*There is no point of populating articles in page because it is already populated above.
-        if(typesRequired){
-            Article.populate(articlesInPage,{path:"type"},function(err,articlesInPage){
-                if(err){
-                    console.error("cannot populate");
-                }
-                res.json(articlesInPage);
-            });
-        }else{
+    if(req.query.pageNumber){
+        pageNumber=parseInt(req.query.pageNumber);
+    }
+    if(req.query.pageSize){
+        pageSize=parseInt(req.query.pageSize);
+    }
+    Article.find({"page":pageId},fields)
+        .sort([['lastUpdated','descending']])
+        .limit(pageSize)
+        .skip(pageSize*pageNumber)
+        .exec((err,articlesInPage)=>{
+            if(err){
+                console.error(err);
+                res.send({"Error":err});
+            }
             res.json(articlesInPage);
-        }*/
-    })
+        });
+}
+
+exports.articlesPerType=(req,res)=>{
+    var articleType=req.params.articleType;
+    var fields="";
+    var pageNumber=0;
+    var pageSize = 10;
+    if(req.query.fields){
+        fields=req.query.fields.split(',')
+    }
+    if(req.query.pageNumber){
+        pageNumber=parseInt(req.query.pageNumber);
+    }
+    if(req.query.pageSize){
+        pageSize=parseInt(req.query.pageSize);
+    }
+    Article.find({"type":articleType},fields)
+        .sort([['lastUpdated','descending']])
+        .limit(pageSize)
+        .skip(pageSize*pageNumber)
+        .exec((err,articlesOfType)=>{
+            if(err){
+                console.error(err);
+                res.send({"Error":err});
+            }
+            res.json(articlesOfType);
+        });
 }
 
 exports.uploadFile=(req,res)=>{
@@ -165,7 +185,7 @@ exports.uploadFile=(req,res)=>{
                     }
                 });
             }
-            if(req.query.file){
+            if(req.query.thumbnail){
                 article.thumbnailName=req.query.thumbnail;
                 req.files.forEach(file => {
                     if(file.originalname===req.query.thumbnail){

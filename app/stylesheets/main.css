@@ -9,3 +9,34 @@
     background-color: #1e5c92;
     background-image: none;
 }
+
+.thumbnailPicture{
+    width: 40%;
+    height: 30%;
+}
+
+.articlesTitle{
+    text-align: center;
+}
+
+.articlesDescription{
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.articlesDiv{
+    margin-bottom: 2%;
+    margin-top: 1%;
+    border: 0px;
+}
+
+.mainWindow{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 1%;
+    margin-bottom: 3%;
+}
+
+#downloadAnchorButton{
+    color: black;
+}

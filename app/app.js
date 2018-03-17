@@ -10,20 +10,18 @@ app.config(($routeProvider)=>{
     }).when("/admin",{
         templateUrl: "app/views/admin.html",
         controller: "adminController"
-    }).when("/pages",{
-        templateUrl: "app/views/pages.html",
-        controller: "pagesController"
     }).when("/contents",{
         templateUrl: "app/views/contents.html",
         controller: "contentsController"
     }).when("/articles/:filterType/:id",{
         templateUrl:"app/views/articles.html",
-        controller:"contentsController"
+        controller:"articlesController"
     }).when("/notifications",{
         templateUrl: "app/views/notifications.html",
         controller: "notificationsController"
     })
 })
+ 
 
 
 app.controller('itemController',($scope)=>{

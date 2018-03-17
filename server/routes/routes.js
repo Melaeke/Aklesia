@@ -28,6 +28,9 @@ module.exports = (app)=>{
     app.route('/api/articlesPerPage/:pageId')
         .get(articlesController.articlesPerPage);
 
+    app.route('/api/articlesPerType/:articleType')
+        .get(articlesController.articlesPerType);
+
     //to upload files, we just need to upload the files to a same form data with the key 'file'
     //then to distinguish which file is which we will use, ?thumbnail=thumbnailFileName&file=theOriginalFileNameToUpload.
     //then the files will be renamed with their original extensions added at the end.

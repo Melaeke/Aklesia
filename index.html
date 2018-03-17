@@ -29,7 +29,7 @@
               <a class="nav-link dropdown-item" ng-repeat="page in model.allPages" href="#!articles/page/{{page._id}}">{{page.name}}</a>
             </div>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="articlesDropDownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Article Type</a>
             <div class="dropdown-menu" aria-labelledby="articlesDropDownLink" id="articlesDropDown">
               <a class="nav-link dropdown-item" ng-repeat="articleType in model.allArticleTypes" href="#!articles/articleType/{{articleType}}">{{articleType}}</a>
@@ -53,7 +53,7 @@
       </div>
   </nav>
 
-  <div class="container">
+  <div class="mainWindow"
       <div ng-view>
       </div>
   </div>
@@ -64,7 +64,7 @@
 <script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
 <script type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script> 
 <script type="text/javascript" src="app/app.js"></script>
-<script type="text/javascript" src="app/controllers/pages-controller.js"></script>
+<script type="text/javascript" src="app/controllers/articles-controller.js"></script>
 <script type="text/javascript" src="app/controllers/admin-controller.js"></script>
 <script type="text/javascript" src="app/controllers/notifications-controller.js"></script>
 <script type="text/javascript" src="app/controllers/index-controller.js"></script>

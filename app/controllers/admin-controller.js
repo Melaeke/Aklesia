@@ -349,7 +349,7 @@ var saveArticle=($scope,$http,networkService)=>{
         showErrorMessage($scope,"Please select the page to upload to");
         return;
     }
-    if(article.type==='Picture' || article.type ==='Video' || article.type=== 'Audio' || article.type==='Resource'){
+    if(article.type==='Picture' || article.type=== 'Audio' || article.type==='Resource'){
         if($scope.model.actionType==="createNew"){
             //if we are creating new article we need to check if a file is uploaded before sending a request.
             if(!(article.file.name)){
@@ -370,6 +370,14 @@ var saveArticle=($scope,$http,networkService)=>{
     var objectToSave={
         "title":article.title,
         "type":article.type
+    }
+    if(article.type === 'Video'){
+        if(!(article.filePath)){
+            showErrorMessage($scope,"Please provide the source link for the video");
+            return;
+        }else{
+            objectToSave.filePath=article.filePath;
+        }
     }
 
     if(article.shortDescription){

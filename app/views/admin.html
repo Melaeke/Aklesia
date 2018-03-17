@@ -158,11 +158,8 @@
                 <textarea class="form-control" id="content" ng-model="model.article.content"/>
             </div>
             <div class="form-group" ng-if="model.article.type === 'Video'">
-                <label class="btn btn-primary" for="video">
-                    <input file-directive-model ="model.article.file" id="video" type="file" style="display:none" >
-                    Upload Video
-                </label>
-                <span class="label label-info" id="video-file-info">{{model.article.file.name?model.article.file.name:model.article.fileName}}</span>
+                <label for="video">Video Source</label>
+                <textarea class="form-control" id="video" ng-model="model.article.filePath"/>
             </div>
 
             <div class="form-group" ng-if="model.article.type === 'Audio'">
