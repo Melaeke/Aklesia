@@ -49,6 +49,16 @@ exports.getAll = (req,res)=>{
         });
 };
 
+exports.countArticles=(req,res)=>{
+    Article.count({},function(err,count){
+        if(err){
+            console.error(err);
+            res.send({"Error":err});
+        }
+        res.json(count);
+    });
+}
+
 exports.create = (req,res)=>{
     var newArticle=new Article(req.body);
     newArticle.save((err,article)=>{
@@ -142,6 +152,17 @@ exports.articlesPerPage=(req,res)=>{
         });
 }
 
+exports.countArticlesPerPage=(req,res)=>{
+    var pageId=req.params.pageId;
+    Article.count({"page":pageId},function(err,count){
+        if(err){
+            console.error(err);
+            res.send({"Error":err});
+        }
+        res.json(count);
+    });
+}
+
 exports.articlesPerType=(req,res)=>{
     var articleType=req.params.articleType;
     var fields="";
@@ -167,6 +188,17 @@ exports.articlesPerType=(req,res)=>{
             }
             res.json(articlesOfType);
         });
+}
+
+exports.countArticlesPerType=(req,res)=>{
+    var articleType=req.params.articleType;
+    Article.count({"type":articleType},function(err,count){
+        if(err){
+            console.error(err);
+            res.send({"Error":err});
+        }
+        res.json(count);
+    });
 }
 
 exports.uploadFile=(req,res)=>{

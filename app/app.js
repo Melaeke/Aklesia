@@ -4,9 +4,8 @@ var app = angular.module('aklesia',['ngRoute']);
 
 app.config(($routeProvider)=>{
     $routeProvider.when("/",{
-        templateUrl:"app/views/index.html"
-    }).when("/home",{
-        templateUrl:"app/views/index.html"
+        templateUrl:"app/views/articles.html",
+        controller: "articlesController"
     }).when("/admin",{
         templateUrl: "app/views/admin.html",
         controller: "adminController"

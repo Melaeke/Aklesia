@@ -19,6 +19,9 @@ module.exports = (app)=>{
     app.route('/api/articles')
         .get(articlesController.getAll)
         .post(articlesController.create);
+
+    app.route('/api/articlesCount')
+        .get(articlesController.countArticles);
     
     app.route('/api/articles/:articleId')
         .get(articlesController.getOne)
@@ -28,8 +31,14 @@ module.exports = (app)=>{
     app.route('/api/articlesPerPage/:pageId')
         .get(articlesController.articlesPerPage);
 
+    app.route('/api/articlesPerPageCount/:pageId')
+        .get(articlesController.countArticlesPerPage);
+
     app.route('/api/articlesPerType/:articleType')
         .get(articlesController.articlesPerType);
+    
+    app.route('/api/articlesPerTypeCount/:articleType')
+        .get(articlesController.countArticlesPerType);
 
     //to upload files, we just need to upload the files to a same form data with the key 'file'
     //then to distinguish which file is which we will use, ?thumbnail=thumbnailFileName&file=theOriginalFileNameToUpload.

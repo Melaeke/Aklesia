@@ -1,0 +1,19 @@
+<div >
+    <div class="card articlesDiv" ng-repeat="article in model.articlesToView">
+        <div class="paragraphs">
+            <img ng-if="article.thumbnailPath && !(article.type==='Video' || article.type === 'Picture') " style="float: left" src="{{article.thumbnailPath}}" alt="{{article.title}}_image" class="col-sm pull-left thumbnailPicture gap-right img-thumbnail"/>
+            <img ng-if="article.type === 'Picture'" style="float: left" src="{{article.filePath}}" alt="{{article.title}}_image" class="col-sm pull-left thumbnailPicture gap-right img-thumbnail"/>
+            <iframe ng-if="article.type === 'Video'" src="https://www.youtube-nocookie.com/embed/-gjI4Pxx3dM" style="float: left;" allow="autoplay; encrypted-media" allowfullscreen class="col-sm pull-left thumbnailPicture gap-right img-thumbnail"></iframe>
+            <div class="articlesTitle"><h1 class="jumbotron-heading">{{article.title}}</h1></div>
+            <p style="text-align: justify" class="articlesDescription">{{article.shortDescription}}<br/>This is the file path {{article.filePath}}</p>
+            <p ng-if="article.type==='Resources'" class="btn" ><a href="{{article.filePath}}"> Download {{article.fileName}}</a></p>
+        </div>
+        <hr/>
+    </div>
+
+    <div>
+        <button class="float-left btn btn-primary btn-lg" style="margin-bottom:3%; " ng-click="changePage(model.currentPage-1);" ng-if="model.currentPage > 0">Previous</button>
+        <button class="float-right btn btn-primary btn-lg" style="margin-bottom:3%;" ng-click="changePage(model.currentPage+1);" ng-if="model.currentPage + 1 < model.totalNumberOfPages">Next</button>
+        <div class="pull-center" style="margin-bottom: 3%; text-align: center">Page {{model.currentPage + 1}} of {{model.totalNumberOfPages}}</span>
+    </div>
+</div>
